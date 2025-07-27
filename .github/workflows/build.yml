@@ -4,9 +4,6 @@ on:
   push:
     branches:
       - main
-  pull_request:
-    branches:
-      - main
 
 jobs:
   build:
@@ -15,15 +12,19 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-        
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: 2.7
+
+      - name: Set up Ruby (version 3.1)
+        run: |
+          brew install ruby@3.1
+          echo 'export PATH="/usr/local/opt/ruby@3.1/bin:$PATH"' >> ~/.bash_profile
+          source ~/.bash_profile
+
+      - name: Install CocoaPods
+        run: |
+          gem install cocoapods
 
       - name: Install dependencies
         run: |
-          gem install cocoapods
           pod install
 
       - name: Build the app
